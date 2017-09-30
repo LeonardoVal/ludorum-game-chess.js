@@ -1,12 +1,9 @@
-﻿require.config({ paths: {
-	'creatartis-base': 'lib/creatartis-base.min',
-	'sermat': 'lib/sermat-umd',
-	'ludorum': 'lib/ludorum.min',
-	'ludorum-game-chess': 'lib/ludorum-game-chess',
-	'playtester': 'lib/playtester-common'
-}});
-require(['creatartis-base', 'sermat', 'ludorum', 'ludorum-game-chess', 'playtester'],
+﻿require(['creatartis-base', 'sermat', 'ludorum', 'ludorum-game-chess', 'playtester'],
 		function (base, Sermat, ludorum, ludorum_game_chess, PlayTesterApp) {
+	window.base = base;
+	window.Sermat = Sermat;
+	window.ludorum = ludorum;
+	window.ludorum_game_chess = ludorum_game_chess;
 	var BasicHTMLInterface = ludorum.players.UserInterface.BasicHTMLInterface;
 
 	/** Custom HTML interface for Chess.
@@ -68,7 +65,7 @@ require(['creatartis-base', 'sermat', 'ludorum', 'ludorum-game-chess', 'playtest
 	/** PlayTesterApp initialization.
 	*/
 	base.global.APP = new PlayTesterApp(
-		new ludorum_game_chess.Chess(), 
+		new ludorum_game_chess.Chess(),
 		new ChessHTMLInterface(),
 		{ bar: document.getElementsByTagName('footer')[0] },
 		[ludorum_game_chess]
@@ -83,4 +80,6 @@ require(['creatartis-base', 'sermat', 'ludorum', 'ludorum-game-chess', 'playtest
 		.selects(['player0', 'player1'])
 		.button('resetButton', document.getElementById('reset'), APP.reset.bind(APP))
 		.reset();
+}, function (err) {
+	console.error(err);
 }); // require().
