@@ -1,5 +1,5 @@
 {
-	"name": "ludorum-game-chess",
+	"name": "@creatartis/ludorum-game-chess",
 	"description": "Chess board game implementation for Ludorum.",
 	"keywords": [
 		"board-game",
