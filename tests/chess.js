@@ -1,9 +1,7 @@
-﻿require(['creatartis-base', 'sermat', 'ludorum', 'ludorum-game-chess', 'playtester'],
-		function (base, Sermat, ludorum, ludorum_game_chess, PlayTesterApp) {
-	window.base = base;
-	window.Sermat = Sermat;
-	window.ludorum = ludorum;
-	window.ludorum_game_chess = ludorum_game_chess;
+require(['require-config'], function (init) { "use strict";
+init(['creatartis-base', 'sermat', 'ludorum', 'playtester', 'ludorum-game-chess'],
+	function (base, Sermat, ludorum, PlayTesterApp, ludorum_game_chess) {
+
 	var BasicHTMLInterface = ludorum.players.UserInterface.BasicHTMLInterface;
 
 	/** Custom HTML interface for Chess.
@@ -72,14 +70,13 @@
 	);
 	APP.playerUI("You")
 		.playerRandom()
-		.playerMonteCarlo("", true, 1000, 500)
-		.playerMonteCarlo("", true, 1000, 1000)
-		.playerUCT("", true, 1000, 500)
-		.playerUCT("", true, 1000, 1000)
-		.playerAlfaBeta("", 3, true)
+		.playerMonteCarlo("", true, 50)
+		.playerMonteCarlo("", true, 100)
+		.playerUCT("", true, 50)
+		.playerUCT("", true, 100)
+		.playerAlfaBeta("", true, 3)
 		.selects(['player0', 'player1'])
 		.button('resetButton', document.getElementById('reset'), APP.reset.bind(APP))
 		.reset();
-}, function (err) {
-	console.error(err);
+}); // init()
 }); // require().
