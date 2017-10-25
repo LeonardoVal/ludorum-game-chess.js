@@ -1,11 +1,5 @@
 (function (init) { "use strict";
-			if (typeof define === 'function' && define.amd) {
-				define(["creatartis-base","sermat","ludorum"], init); // AMD module.
-			} else if (typeof exports === 'object' && module.exports) {
-				module.exports = init(require("creatartis-base"),require("sermat"),require("ludorum")); // CommonJS module.
-			} else {
-				this["ludorum-game-chess"] = init(this.base,this.Sermat,this.ludorum); // Browser.
-			}
+			this["ludorum-game-chess"] = init(this.base,this.Sermat,this.ludorum);
 		}).call(this,/** Package wrapper and layout.
 */
 function __init__(base, Sermat, ludorum) { "use strict";
@@ -517,4 +511,4 @@ KINDS.King = declare(Piece, { //////////////////////////////////////////////////
 	return exports;
 }
 );
-//# sourceMappingURL=ludorum-game-chess.js.map
+//# sourceMappingURL=ludorum-game-chess-tag.js.map
