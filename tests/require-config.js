@@ -47,7 +47,7 @@
 		"creatartis-base": "../node_modules/creatartis-base/build/creatartis-base.min",
 		"sermat": "../node_modules/sermat/build/sermat-umd-min",
 		"ludorum": "../node_modules/ludorum/build/ludorum.min",
-		"chess.js": "../node_modules/chess.js/chess",
+		"chess": "../node_modules/chess.js/chess",
 		"playtester": "../node_modules/ludorum/build/playtester-common"
 	}
 });

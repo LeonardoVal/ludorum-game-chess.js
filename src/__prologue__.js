@@ -1,6 +1,6 @@
 ﻿/** Package wrapper and layout.
 */
-function __init__(base, Sermat, ludorum) { "use strict";
+function __init__(base, Sermat, ludorum, ChessJS) { "use strict";
 // Import synonyms. ////////////////////////////////////////////////////////////////////////////////
 	var declare = base.declare,
 		obj = base.obj,
@@ -16,9 +16,9 @@ function __init__(base, Sermat, ludorum) { "use strict";
 
 // Library layout. /////////////////////////////////////////////////////////////////////////////////
 	var exports = {
-		__package__: 'ludorum-game-connect4',
-		__name__: 'ludorum_game_connect4',
+		__package__: 'ludorum-game-chess',
+		__name__: 'ludorum_game_chess',
 		__init__: __init__,
-		__dependencies__: [base, Sermat, ludorum],
+		__dependencies__: [base, Sermat, ludorum, ChessJS],
 		__SERMAT__: { include: [base, ludorum] }
 	};

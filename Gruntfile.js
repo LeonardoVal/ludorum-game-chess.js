@@ -12,7 +12,9 @@ module.exports = function (grunt) {
 			{ id: 'sermat', name: 'Sermat',
 		 		path: 'node_modules/sermat/build/sermat-umd-min.js' },
 			{ id: 'ludorum' },
-			{ id: 'chess.js', name: 'chess' },
+			{ id: 'chess', name: 'ChessJS', module: false,
+				path: 'node_modules/chess.js/chess.js'
+			},
 			{ id: 'playtester', dev: true, module: false,
 		 		path: 'node_modules/ludorum/build/playtester-common.js' }
 		],
@@ -25,6 +27,9 @@ module.exports = function (grunt) {
 				fileName: 'build/ludorum-game-chess-tag',
 				wrapper: 'tag'
 			}
+		},
+		connect: {
+			playtester: 'tests/chess.html'
 		}
 	});
 
