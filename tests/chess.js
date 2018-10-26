@@ -1,6 +1,6 @@
 require(['require-config'], function (init) { "use strict";
-init(['creatartis-base', 'sermat', 'ludorum', 'playtester', 'ludorum-game-chess'],
-	function (base, Sermat, ludorum, PlayTesterApp, ludorum_game_chess) {
+init(['creatartis-base', 'sermat', 'ludorum', 'chess.js', 'playtester', 'ludorum-game-chess'],
+	function (base, Sermat, ludorum, chess, PlayTesterApp, ludorum_game_chess) {
 
 	var BasicHTMLInterface = ludorum.players.UserInterface.BasicHTMLInterface;
 
@@ -78,5 +78,6 @@ init(['creatartis-base', 'sermat', 'ludorum', 'playtester', 'ludorum-game-chess'
 		.selects(['player0', 'player1'])
 		.button('resetButton', document.getElementById('reset'), APP.reset.bind(APP))
 		.reset();
+	APP.chess = chess;
 }); // init()
 }); // require().
