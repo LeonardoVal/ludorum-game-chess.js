@@ -3,16 +3,15 @@
 function __init__(base, Sermat, ludorum, ChessJS) { "use strict";
 // Import synonyms. ////////////////////////////////////////////////////////////////////////////////
 	var declare = base.declare,
-		obj = base.obj,
-		copy = base.copy,
-		raise = base.raise,
-		raiseIf = base.raiseIf,
-		Iterable = base.Iterable,
 		iterable = base.iterable,
-		Game = ludorum.Game,
-		Checkerboard = ludorum.utils.Checkerboard,
-		CheckerboardFromString = ludorum.utils.CheckerboardFromString,
 		UserInterface = ludorum.players.UserInterface;
+
+// Workaround for difference in module definition depending on platform. ///////////////////////////
+	if (typeof ChessJS === 'object') {
+		ChessJS = ChessJS.Chess;
+	}
+	var CHESS = ChessJS(),
+		INITIAL_FEN = CHESS.fen();
 
 // Library layout. /////////////////////////////////////////////////////////////////////////////////
 	var exports = {
