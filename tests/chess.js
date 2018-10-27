@@ -22,8 +22,30 @@ init(['creatartis-base', 'sermat', 'ludorum', 'chess', 'playtester', 'ludorum-ga
 
 		display: function display(game) {
 			this.container.innerHTML = ''; // empty the board's DOM.
+			var moves = game.moves(),
+				table = this.document.createElement('table'),
+				tr, td, coord, data;
+			this.container.appendChild(table);
+			for (var row = 0; row < 8; row++) {
+				tr = this.document.createElement('tr');
+				table.appendChild(tr);
+				for (var col = 0; col < 8; col++) {
+					td = this.document.createElement('td');
+					coord = [row, col];
+					data = td['ludorum-data'] = {
+						square: game.square(coord),
+						coord: coord
+					};
+					td.id = 'ludorum-square-'+ row +'-'+ col;
+					td.className = this.__className__(data.square);
+					td.innerHTML = '&nbsp';
+					//TODO td.onclick
+					tr.appendChild(td);
+				}
+			}
+			return this;
+/*
 			var ui = this,
-				moves = game.moves(),
 				activePlayer = game.activePlayer(),
 				board = game.board,
 				movesByFrom = moves ? base.iterable(moves[activePlayer]).groupAll(function (m) {
@@ -35,7 +57,7 @@ init(['creatartis-base', 'sermat', 'ludorum', 'chess', 'playtester', 'ludorum-ga
 			board.renderAsHTMLTable(ui.document, ui.container, function (data) {
 				/** The graphic of the square is defined by a CSS class. E.g. `ludorum-square-empty`,
 				`ludorum-square-White-Rook`, `ludorum-square-Black-Pawn` or `ludorum-square-move`.
-				*/
+				* /
 				var coordString = data.coord +'';
 				data.className = ui.__className__(data.square);
 				data.innerHTML = '&nbsp;';
@@ -57,6 +79,7 @@ init(['creatartis-base', 'sermat', 'ludorum', 'chess', 'playtester', 'ludorum-ga
 				}
 			});
 			return ui;
+*/
 		}
 	});
 
