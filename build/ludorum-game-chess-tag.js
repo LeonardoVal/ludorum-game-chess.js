@@ -16,13 +16,19 @@ function __init__(base, Sermat, ludorum, ChessJS) { "use strict";
 		INITIAL_FEN = CHESS.fen();
 
 // Library layout. /////////////////////////////////////////////////////////////////////////////////
-	var exports = {
-		__package__: 'ludorum-game-chess',
-		__name__: 'ludorum_game_chess',
-		__init__: __init__,
-		__dependencies__: [base, Sermat, ludorum, ChessJS],
-		__SERMAT__: { include: [base, ludorum] }
-	};
+	var chessjs_package = {
+			__package__: 'chess.js',
+			__name__: 'ChessJS',
+			__init__: eval('(function __init__() { return ('+ ChessJS +'); })'),
+			__dependencies__: []
+		},
+		exports = {
+			__package__: 'ludorum-game-chess',
+			__name__: 'ludorum_game_chess',
+			__init__: __init__,
+			__dependencies__: [base, Sermat, ludorum, chessjs_package],
+			__SERMAT__: { include: [base, ludorum] }
+		};
 
 
 /** # Chess
@@ -78,6 +84,7 @@ var Chess = exports.Chess = declare(ludorum.Game, {
 		globalChess.move(moves[this.activePlayer()]);
 		if (update) {
 			this.fen = globalChess.fen();
+			return this;
 		} else {
 			return new this.constructor({ fen: globalChess.fen() });
 		}
