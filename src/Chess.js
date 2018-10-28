@@ -51,6 +51,7 @@ var Chess = exports.Chess = declare(ludorum.Game, {
 		globalChess.move(moves[this.activePlayer()]);
 		if (update) {
 			this.fen = globalChess.fen();
+			return this;
 		} else {
 			return new this.constructor({ fen: globalChess.fen() });
 		}
