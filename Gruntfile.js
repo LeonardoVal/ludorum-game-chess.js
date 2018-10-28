@@ -18,6 +18,9 @@ module.exports = function (grunt) {
 			{ id: 'playtester', dev: true, module: false,
 		 		path: 'node_modules/ludorum/build/playtester-common.js' }
 		],
+		jshint: {
+			evil: true
+		},
 		targets: {
 			build_umd: {
 				fileName: 'build/ludorum-game-chess',

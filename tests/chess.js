@@ -17,7 +17,8 @@ init(['creatartis-base', 'sermat', 'ludorum', 'chess', 'playtester', 'ludorum-ga
 		/** CSS class name for the square.
 		*/
 		__className__: function __className__(square) {
-			return !square ? 'ludorum-square-empty' : 'ludorum-square-'+ square.player +'-'+ square.name;
+			return !square ? 'ludorum-square-empty' 
+				: 'ludorum-square-'+ square.player +'-'+ square.name;
 		},
 
 		display: function display(game) {
@@ -32,7 +33,7 @@ init(['creatartis-base', 'sermat', 'ludorum', 'chess', 'playtester', 'ludorum-ga
 				for (var col = 0; col < 8; col++) {
 					td = this.document.createElement('td');
 					coord = [row, col];
-					data = td['ludorum-data'] = {
+					data = {
 						square: game.square(coord),
 						coord: coord
 					};
@@ -40,6 +41,7 @@ init(['creatartis-base', 'sermat', 'ludorum', 'chess', 'playtester', 'ludorum-ga
 					td.className = this.__className__(data.square);
 					td.innerHTML = '&nbsp';
 					//TODO td.onclick
+					td['ludorum-data'] = data;
 					tr.appendChild(td);
 				}
 			}
@@ -93,10 +95,10 @@ init(['creatartis-base', 'sermat', 'ludorum', 'chess', 'playtester', 'ludorum-ga
 	);
 	APP.playerUI("You")
 		.playerRandom()
+		.playerMonteCarlo("", true, 10)
 		.playerMonteCarlo("", true, 50)
-		.playerMonteCarlo("", true, 100)
+		.playerUCT("", true, 10)
 		.playerUCT("", true, 50)
-		.playerUCT("", true, 100)
 		.playerAlfaBeta("", true, 3)
 		.selects(['player0', 'player1'])
 		.button('resetButton', document.getElementById('reset'), APP.reset.bind(APP))
