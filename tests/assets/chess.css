@@ -143,3 +143,7 @@ footer {
 #board table tr:nth-child(even) td:nth-child(odd) {
 	background-color: rgb(200,200,200);
 }
+
+#board table .ludorum-square-selected { 
+	background-color: red;
+}
