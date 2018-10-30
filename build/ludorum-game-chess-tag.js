@@ -66,12 +66,12 @@ var Chess = exports.Chess = declare(ludorum.Game, {
 	/** A move always places a piece in an empty square, if and only if by doing so one or more
 	lines of the opponent's pieces get enclosed between pieces of the active player.
 	*/
-	moves: function moves() {
+	moves: function moves(options) {
 		var globalChess = syncGlobalChess(this.fen),
 			r = null;
 		if (!globalChess.game_over()) {
 			r = {};
-			r[this.activePlayer()] = globalChess.moves();
+			r[this.activePlayer()] = globalChess.moves(options);
 		}
 		return r;
 	},
