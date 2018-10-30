@@ -29,18 +29,26 @@ init(['creatartis-base', 'sermat', 'ludorum', 'chess', 'playtester', 'ludorum-ga
 			return r;
 		},
 
+		__movesBySquare__: function __movesBySquare__(game) {
+			var moves = game.moves({ verbose: true });
+			return moves && base.iterable(moves.White || moves.Black).map(function (move) {
+				return [move.from +' '+ move.to, move.san];
+			}).toObject();
+		}, 
+
 		display: function display(game) {
 			this.container.innerHTML = ''; // empty the board's DOM.
-			var moves = game.moves(),
+			var moves = this.__movesBySquare__(game),
+				activePlayer = game.activePlayer(),
 				table = this.document.createElement('table'),
 				tr, td, coord, data;
 			this.container.appendChild(table);
-			for (var row = 0; row < 8; row++) {
+			for (var row = 1; row < 9; row++) {
 				tr = this.document.createElement('tr');
 				table.appendChild(tr);
-				for (var col = 0; col < 8; col++) {
+				for (var col = 1; col < 9; col++) {
 					td = this.document.createElement('td');
-					coord = 'abcdefgh'.charAt(col) + row;
+					coord = '.abcdefgh'.charAt(col) + row;
 					data = {
 						square: game.square(coord),
 						coord: coord
@@ -48,59 +56,27 @@ init(['creatartis-base', 'sermat', 'ludorum', 'chess', 'playtester', 'ludorum-ga
 					td.id = 'ludorum-square-'+ row +'-'+ col;
 					td.className = this.__className__(data.square, data.coord);
 					td.innerHTML = '&nbsp';
-					//TODO td.onclick
-					if (this.selectedPiece) {
-						td.onclick = function () {
+					td.onclick = (function (data) {
+						//console.log('Click @ '+ data.coord);//FIXME
+						var m = this.selectedPiece +' '+ data.coord;
+						if (moves.hasOwnProperty(m)) {
 							this.selectedPiece = null;
-							this.display(game); // Redraw the game state.
-						};
-					} else {
-						td.onclick = function () {
-							this.selectedPiece = coord;
-							this.display(game); // Redraw the game state.
-						};
-					}
+							this.perform(moves[m], activePlayer);
+						} else if (this.selectedPiece !== data.coord) {
+							if (data.square 
+									&& data.square.color === activePlayer.toLowerCase().charAt(0)) {
+								this.selectedPiece = data.coord;
+							} else {
+								this.selectedPiece = null;
+							}
+						}
+						this.display(game); // Redraw the game state.
+					}).bind(this, data);
 					td['ludorum-data'] = data;
 					tr.appendChild(td);
 				}
 			}
 			return this;
-/*
-			var ui = this,
-				activePlayer = game.activePlayer(),
-				board = game.board,
-				movesByFrom = moves ? base.iterable(moves[activePlayer]).groupAll(function (m) {
-					return m[1] +'';
-				}) : {},
-				selectedMoves = ui.selectedPiece && iterable(movesByFrom[ui.selectedPiece]).map(function (m) {
-					return [m[2] +'', m];
-				}).toObject();
-			board.renderAsHTMLTable(ui.document, ui.container, function (data) {
-				/** The graphic of the square is defined by a CSS class. E.g. `ludorum-square-empty`,
-				`ludorum-square-White-Rook`, `ludorum-square-Black-Pawn` or `ludorum-square-move`.
-				* /
-				var coordString = data.coord +'';
-				data.className = ui.__className__(data.square);
-				data.innerHTML = '&nbsp;';
-				if (ui.selectedPiece) {
-					if (selectedMoves && selectedMoves.hasOwnProperty(coordString)) {
-						data.className = 'ludorum-square-'+ activePlayer +'-move';
-						data.onclick = function () {
-							var selectedPiece = ui.selectedPiece;
-							ui.selectedPiece = null;
-							ui.perform(selectedMoves[coordString], activePlayer);
-						};
-					}
-				}
-				if (movesByFrom.hasOwnProperty(coordString)) {
-					data.onclick = function () {
-						ui.selectedPiece = coordString;
-						ui.display(game); // Redraw the game state.
-					};
-				}
-			});
-			return ui;
-*/
 		}
 	});
 
