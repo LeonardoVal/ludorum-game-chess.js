@@ -257,7 +257,7 @@ exports.ai.heuristic1 = (function () {
 					if (sq) {
 						//FIXME Check player's role.
 						result += pieceFactors[sq.type] * (sq.color === 'w' ? 
-							boardFactors[row][col] : boardFactors[8 - row][col]);
+							boardFactors[sq.type][row][col] : boardFactors[sq.type][8 - row][col]);
 					}
 				}
 			}
