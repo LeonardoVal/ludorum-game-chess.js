@@ -119,16 +119,7 @@ var Chess = exports.Chess = declare(ludorum.Game, {
 			}
 			return r;
 		};
-	})(),
-
-	// ## Heuristics ###############################################################################
-
-	/** `Chess.heuristics` is a bundle of helper functions to build heuristic evaluation functions
-	for this game.
-	*/
-	'static heuristics': {
-		// TODO
-	}
+	})()
 }); // declare Othello.
 
 /** Adding Chess to `ludorum.games`.
