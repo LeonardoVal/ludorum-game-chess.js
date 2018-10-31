@@ -25,5 +25,7 @@ function __init__(base, Sermat, ludorum, ChessJS) { "use strict";
 			__name__: 'ludorum_game_chess',
 			__init__: __init__,
 			__dependencies__: [base, Sermat, ludorum, chessjs_package],
-			__SERMAT__: { include: [base, ludorum] }
+			__SERMAT__: { include: [base, ludorum] },
+			// Submodules
+			ai: { }
 		};
