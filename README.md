@@ -6,7 +6,7 @@ Chess board game implementation to use with game framework [Ludorum](http://gith
 
 ## License
 
-Open source under an MIT license. See [LICENSE](LICENSE.md).
+Open source under an MIT license. See [LICENSE](LICENSE).
 
 ## Contact
 
