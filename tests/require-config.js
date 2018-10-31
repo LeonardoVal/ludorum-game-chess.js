@@ -30,7 +30,11 @@
 							name +"`.");
 					}
 				});
-				main.apply(window, args);
+				switch (typeof main) {
+					case 'undefined': break;
+					case 'function': main.apply(window, args); break;
+					default: throw new Error('Invalid main function '+ main +'!');
+				}
 				console.log("Ready.");
 			}, function (err) {
 				console.error(err);
@@ -43,6 +47,7 @@
 		"creatartis-base": "../node_modules/creatartis-base/build/creatartis-base.min",
 		"sermat": "../node_modules/sermat/build/sermat-umd-min",
 		"ludorum": "../node_modules/ludorum/build/ludorum.min",
+		"chess": "../node_modules/chess.js/chess",
 		"playtester": "../node_modules/ludorum/build/playtester-common"
 	}
 });

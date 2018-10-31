@@ -1,6 +1,6 @@
 require(['require-config'], function (init) { "use strict";
-init(['creatartis-base', 'sermat', 'ludorum', 'playtester', 'ludorum-game-chess'],
-	function (base, Sermat, ludorum, PlayTesterApp, ludorum_game_chess) {
+init(['creatartis-base', 'sermat', 'ludorum', 'chess', 'playtester', 'ludorum-game-chess'],
+	function (base, Sermat, ludorum, ChessJS, PlayTesterApp, ludorum_game_chess) {
 
 	var BasicHTMLInterface = ludorum.players.UserInterface.BasicHTMLInterface;
 
@@ -16,47 +16,67 @@ init(['creatartis-base', 'sermat', 'ludorum', 'playtester', 'ludorum-game-chess'
 
 		/** CSS class name for the square.
 		*/
-		__className__: function __className__(square) {
-			return !square ? 'ludorum-square-empty' : 'ludorum-square-'+ square.player +'-'+ square.name;
+		__className__: function __className__(square, coord) {
+			var r;
+			if (!square) {
+				r = 'ludorum-square-empty';
+			} else {
+				r = 'ludorum-square-'+ square.player +'-'+ square.name;
+			}
+			if (coord === this.selectedPiece) {
+				r += ' ludorum-square-selected';
+			}
+			return r;
 		},
+
+		__movesBySquare__: function __movesBySquare__(game) {
+			var moves = game.moves({ verbose: true });
+			return moves && base.iterable(moves.White || moves.Black).map(function (move) {
+				return [move.from +' '+ move.to, move.san];
+			}).toObject();
+		}, 
 
 		display: function display(game) {
 			this.container.innerHTML = ''; // empty the board's DOM.
-			var ui = this,
-				moves = game.moves(),
+			var moves = this.__movesBySquare__(game),
 				activePlayer = game.activePlayer(),
-				board = game.board,
-				movesByFrom = moves ? base.iterable(moves[activePlayer]).groupAll(function (m) {
-					return m[1] +'';
-				}) : {},
-				selectedMoves = ui.selectedPiece && iterable(movesByFrom[ui.selectedPiece]).map(function (m) {
-					return [m[2] +'', m];
-				}).toObject();
-			board.renderAsHTMLTable(ui.document, ui.container, function (data) {
-				/** The graphic of the square is defined by a CSS class. E.g. `ludorum-square-empty`,
-				`ludorum-square-White-Rook`, `ludorum-square-Black-Pawn` or `ludorum-square-move`.
-				*/
-				var coordString = data.coord +'';
-				data.className = ui.__className__(data.square);
-				data.innerHTML = '&nbsp;';
-				if (ui.selectedPiece) {
-					if (selectedMoves && selectedMoves.hasOwnProperty(coordString)) {
-						data.className = 'ludorum-square-'+ activePlayer +'-move';
-						data.onclick = function () {
-							var selectedPiece = ui.selectedPiece;
-							ui.selectedPiece = null;
-							ui.perform(selectedMoves[coordString], activePlayer);
-						};
-					}
-				}
-				if (movesByFrom.hasOwnProperty(coordString)) {
-					data.onclick = function () {
-						ui.selectedPiece = coordString;
-						ui.display(game); // Redraw the game state.
+				table = this.document.createElement('table'),
+				tr, td, coord, data;
+			this.container.appendChild(table);
+			for (var row = 1; row < 9; row++) {
+				tr = this.document.createElement('tr');
+				table.appendChild(tr);
+				for (var col = 1; col < 9; col++) {
+					td = this.document.createElement('td');
+					coord = '.abcdefgh'.charAt(col) + row;
+					data = {
+						square: game.square(coord),
+						coord: coord
 					};
+					td.id = 'ludorum-square-'+ row +'-'+ col;
+					td.className = this.__className__(data.square, data.coord);
+					td.innerHTML = '&nbsp';
+					td.onclick = (function (data) {
+						//console.log('Click @ '+ data.coord);//FIXME
+						var m = this.selectedPiece +' '+ data.coord;
+						if (moves.hasOwnProperty(m)) {
+							this.selectedPiece = null;
+							this.perform(moves[m], activePlayer);
+						} else if (this.selectedPiece !== data.coord) {
+							if (data.square 
+									&& data.square.color === activePlayer.toLowerCase().charAt(0)) {
+								this.selectedPiece = data.coord;
+							} else {
+								this.selectedPiece = null;
+							}
+						}
+						this.display(game); // Redraw the game state.
+					}).bind(this, data);
+					td['ludorum-data'] = data;
+					tr.appendChild(td);
 				}
-			});
-			return ui;
+			}
+			return this;
 		}
 	});
 
@@ -70,10 +90,10 @@ init(['creatartis-base', 'sermat', 'ludorum', 'playtester', 'ludorum-game-chess'
 	);
 	APP.playerUI("You")
 		.playerRandom()
+		.playerMonteCarlo("", true, 10)
 		.playerMonteCarlo("", true, 50)
-		.playerMonteCarlo("", true, 100)
+		.playerUCT("", true, 10)
 		.playerUCT("", true, 50)
-		.playerUCT("", true, 100)
 		.playerAlfaBeta("", true, 3)
 		.selects(['player0', 'player1'])
 		.button('resetButton', document.getElementById('reset'), APP.reset.bind(APP))
