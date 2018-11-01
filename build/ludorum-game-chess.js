@@ -253,29 +253,52 @@ exports.ai.heuristic1 = (function () {
 	var makeEvaluationFunction = function makeEvaluationFunction(boardFactors, pieceFactors) {
 		boardFactors = boardFactors || BOARD_FACTORS;
 		pieceFactors = pieceFactors || PIECE_FACTORS;
-		//TODO Calculate max result for normalization.
+		var maxBoardFactor = iterable(boardFactors).select(1).flatten().flatten().max(),
+			pieceFactorSum = 16 * pieceFactors.p + 4 * pieceFactors.n + 4 * pieceFactors.b +
+				4 * pieceFactors.r + 2 * pieceFactors.q + 2 * pieceFactors.k,
+			maxEvaluation = 32 * maxBoardFactor + pieceFactorSum;
 		return function chessHeuristic(game, role) {
-			var result = 0, 
-				sq;
+			var result = 0,
+				roleColor = role.charAt(0).toLowerCase(),
+				sq, boardFactor;
 			for (var row = 0; row < 8; row++) {
 				for (var col = 0; col < 8; col++) {
 					sq = game.square([row, col]);
 					if (sq) {
-						//FIXME Check player's role.
-						result += pieceFactors[sq.type] * (sq.color === 'w' ? 
-							boardFactors[sq.type][row][col] : boardFactors[sq.type][8 - row][col]);
+						boardFactor = sq.color === 'w' ? boardFactors[sq.type][row][col] : 
+							boardFactors[sq.type][7 - row][col];
+						result += (sq.color === roleColor ? +1 : -1) * 
+							(pieceFactors[sq.type] + boardFactor);
 					}
 				}
 			}
-			return result; //FIXME Normalize!
+			return result / maxEvaluation;
 		};
 	};
 
 	return {
 		BOARD_FACTORS: BOARD_FACTORS,
 		PIECE_FACTORS: PIECE_FACTORS,
-		makeEvaluationFunction: makeEvaluationFunction
-		//TODO Player building functions (MiniMax, etc).
+		HEURISTIC_FUNCTION: makeEvaluationFunction(),
+		makeEvaluationFunction: makeEvaluationFunction,
+
+		heuristicPlayer: function heuristicPlayer(options) {
+			options = options || {};
+			if (!options.heuristic) {
+				options.heuristic = makeEvaluationFunction(options.boardFactors,
+					options.pieceFactors);
+			}
+			return new ludorum.players.HeuristicPlayer(options);
+		},
+
+		minimaxPlayer: function minimaxPlayer(options) {
+			options = options || {};
+			if (!options.heuristic) {
+				options.heuristic = makeEvaluationFunction(options.boardFactors,
+					options.pieceFactors);
+			}
+			return new ludorum.players.AlphaBetaPlayer(options);
+		}
 	};
 })();
 
