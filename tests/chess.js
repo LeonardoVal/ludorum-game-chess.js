@@ -91,10 +91,11 @@ init(['creatartis-base', 'sermat', 'ludorum', 'chess', 'playtester', 'ludorum-ga
 	APP.playerUI("You")
 		.playerRandom()
 		.playerMonteCarlo("", true, 10)
-		.playerMonteCarlo("", true, 50)
 		.playerUCT("", true, 10)
-		.playerUCT("", true, 50)
 		.playerAlfaBeta("", true, 3)
+		.player("Heuristic1", function () {
+			return ludorum_game_chess.ai.heuristic1.minimaxPlayer({ horizon: 2 });
+		}, true)
 		.selects(['player0', 'player1'])
 		.button('resetButton', document.getElementById('reset'), APP.reset.bind(APP))
 		.reset();
