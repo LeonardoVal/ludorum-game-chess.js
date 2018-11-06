@@ -2,12 +2,14 @@
 	"name": "@creatartis/ludorum-game-chess",
 	"description": "Chess board game implementation for Ludorum.",
 	"keywords": [
+		"javascript",
+		"chess-game",
+		"chess-board-game",
+		"ludorum",
 		"board-game",
 		"board-game-framework",
 		"artificial-intelligence",
-		"artificial-players",
-		"javascript",
-		"chess-game"
+		"artificial-players"
 	],
 	"version": "0.0.1",
 	"author": {
